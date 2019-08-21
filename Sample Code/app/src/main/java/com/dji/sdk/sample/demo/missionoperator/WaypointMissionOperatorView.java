@@ -8,6 +8,8 @@ import android.view.View;
 import com.dji.sdk.sample.R;
 import com.dji.sdk.sample.demo.missionmanager.MissionBaseView;
 import com.dji.sdk.sample.internal.controller.DJISampleApplication;
+import com.dji.sdk.sample.internal.utils.MissionSetter;
+import com.dji.sdk.sample.internal.utils.Reader;
 import com.dji.sdk.sample.internal.utils.ToastUtils;
 import dji.common.error.DJIError;
 import dji.common.flightcontroller.FlightControllerState;
@@ -51,7 +53,8 @@ public class WaypointMissionOperatorView extends MissionBaseView {
     private WaypointMissionOperator waypointMissionOperator;
     private WaypointMission mission;
     private WaypointMissionOperatorListener listener;
-    private final int WAYPOINT_COUNT = 5;
+    private Reader rdr = new Reader();
+    //private final int WAYPOINT_COUNT = 5;
 
     public WaypointMissionOperatorView(Context context) {
         super(context);
@@ -89,17 +92,20 @@ public class WaypointMissionOperatorView extends MissionBaseView {
 
             case R.id.btn_set_maximum_radius:
                 if (getFlightController() != null) {
-                    flightController.setMaxFlightRadius(500, new CommonCallbacks.CompletionCallback() {
+                    flightController.setMaxFlightRadius(700, new CommonCallbacks.CompletionCallback() {
                         @Override
                         public void onResult(DJIError djiError) {
-                            ToastUtils.setResultToToast(djiError == null ? "Max Flight Radius is set to 500m!" : djiError.getDescription());
+                            ToastUtils.setResultToToast(djiError == null ? "Max Flight Radius is set to 700!" : djiError.getDescription());
                         }
                     });
                 }
                 break;
             case R.id.btn_load:
                 // Example of loading a Mission
-                mission = createRandomWaypointMission(WAYPOINT_COUNT, 1);
+               // mission = createRandomWaypointMission(WAYPOINT_COUNT, 1);
+                MissionSetter ms = new MissionSetter();
+
+                mission = ms.setMission(rdr.readInput());
                 DJIError djiError = waypointMissionOperator.loadMission(mission);
                 showResultToast(djiError);
 
@@ -340,7 +346,7 @@ public class WaypointMissionOperatorView extends MissionBaseView {
                 // Example of Download Listener
                 if (waypointMissionDownloadEvent.getProgress() != null
                     && waypointMissionDownloadEvent.getProgress().isSummaryDownloaded
-                    && waypointMissionDownloadEvent.getProgress().downloadedWaypointIndex == (WAYPOINT_COUNT - 1)) {
+                    && waypointMissionDownloadEvent.getProgress().downloadedWaypointIndex == (rdr.size() - 1)) {
                     ToastUtils.setResultToToast("Download successful!");
                 }
                 updateWaypointMissionState();
@@ -351,7 +357,7 @@ public class WaypointMissionOperatorView extends MissionBaseView {
                 // Example of Upload Listener
                 if (waypointMissionUploadEvent.getProgress() != null
                     && waypointMissionUploadEvent.getProgress().isSummaryUploaded
-                    && waypointMissionUploadEvent.getProgress().uploadedWaypointIndex == (WAYPOINT_COUNT - 1)) {
+                    && waypointMissionUploadEvent.getProgress().uploadedWaypointIndex == (rdr.size() - 1)) {
                     ToastUtils.setResultToToast("Upload successful!");
                 }
                 updateWaypointMissionState();
