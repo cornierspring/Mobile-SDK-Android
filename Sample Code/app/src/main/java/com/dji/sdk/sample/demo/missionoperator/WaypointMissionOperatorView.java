@@ -205,8 +205,10 @@ public class WaypointMissionOperatorView extends MissionBaseView {
                 flightController.setStateCallback(new FlightControllerState.Callback() {
                     @Override
                     public void onUpdate(@NonNull FlightControllerState flightControllerState) {
-                        homeLatitude = flightControllerState.getHomeLocation().getLatitude();
-                        homeLongitude = flightControllerState.getHomeLocation().getLongitude();
+//                        homeLatitude = flightControllerState.getHomeLocation().getLatitude();
+//                        homeLongitude = flightControllerState.getHomeLocation().getLongitude();
+                        homeLatitude =  -36.955024;
+                        homeLongitude = 174.784514;
                         flightState = flightControllerState.getFlightMode();
 
                         updateWaypointMissionState();
@@ -348,7 +350,8 @@ public class WaypointMissionOperatorView extends MissionBaseView {
                 rdr.readInput();
                 if (waypointMissionDownloadEvent.getProgress() != null
                     && waypointMissionDownloadEvent.getProgress().isSummaryDownloaded
-                    && waypointMissionDownloadEvent.getProgress().downloadedWaypointIndex == (rdr.size() - 1)) {
+//                    && waypointMissionDownloadEvent.getProgress().downloadedWaypointIndex == (rdr.size() - 1)) {
+                   && waypointMissionDownloadEvent.getProgress().downloadedWaypointIndex == (5 - 1)) {
                     ToastUtils.setResultToToast("Download successful!");
                 }
                 updateWaypointMissionState();
@@ -360,7 +363,8 @@ public class WaypointMissionOperatorView extends MissionBaseView {
                 rdr.readInput();
                 if (waypointMissionUploadEvent.getProgress() != null
                     && waypointMissionUploadEvent.getProgress().isSummaryUploaded
-                    && waypointMissionUploadEvent.getProgress().uploadedWaypointIndex == (rdr.size() - 1)) {
+//                        && waypointMissionUploadEvent.getProgress().uploadedWaypointIndex == (rdr.size() - 1)) {
+                    && waypointMissionUploadEvent.getProgress().uploadedWaypointIndex == (4)) {
                     ToastUtils.setResultToToast("Upload successful!");
                 }
                 updateWaypointMissionState();

@@ -42,13 +42,10 @@ public class MissionSetter {
 
     public WaypointMission setMission(String[][] coordinates, int numCoordinates) {
 
-        MissionControl mc = DJISDKManager.getInstance().getMissionControl();
-        WaypointMissionOperator wmo = mc.getWaypointMissionOperator();
-
         WaypointMission.Builder builder =  new WaypointMission.Builder();
 
-        double baseLatitude = 22;
-        double baseLongitude = 113;
+        double baseLatitude = -36.955024;
+        double baseLongitude = 174.784514;
         Object latitudeValue = KeyManager.getInstance().getValue((FlightControllerKey.create(HOME_LOCATION_LATITUDE)));
         Object longitudeValue = KeyManager.getInstance().getValue((FlightControllerKey.create(HOME_LOCATION_LONGITUDE)));
         builder.autoFlightSpeed(5f);
@@ -70,13 +67,11 @@ public class MissionSetter {
         List<Waypoint> listOfWaypoints = new ArrayList<>();
 
 
-        for (int i = 0; i < numCoordinates; i++) {
-            final Waypoint wp = new Waypoint(Double.parseDouble(routeCoordinates[i][0]), // c
-                    Double.parseDouble(routeCoordinates[i][1]),
-                    Float.parseFloat(routeCoordinates[i][2]));
+        for (int i = 0; i < 5; i++) {
+            final Waypoint wp = new Waypoint(-36.955024 + (i * 0.0002), 174.784514 + (i * 0.0002),20 + i);
 
             WaypointAction turn = new WaypointAction(WaypointActionType.ROTATE_AIRCRAFT,
-                    Integer.parseInt(routeCoordinates[i][3]));// may need action param
+                   30);// may need action param
             wp.addAction(turn);
 
 //            WaypointAction gimbal = new WaypointAction(WaypointActionType.GIMBAL_PITCH, routeCoordinates[i][4]);
@@ -87,10 +82,27 @@ public class MissionSetter {
 
             listOfWaypoints.add(wp);
 
+//        for (int i = 0; i < numCoordinates; i++) {
+//            final Waypoint wp = new Waypoint(Double.parseDouble(routeCoordinates[i][0]), // c
+//                    Double.parseDouble(routeCoordinates[i][1]),
+//                    Float.parseFloat(routeCoordinates[i][2]));
+//
+//            WaypointAction turn = new WaypointAction(WaypointActionType.ROTATE_AIRCRAFT,
+//                    Integer.parseInt(routeCoordinates[i][3]));// may need action param
+//            wp.addAction(turn);
+//
+////            WaypointAction gimbal = new WaypointAction(WaypointActionType.GIMBAL_PITCH, routeCoordinates[i][4]);
+////            wp.addAction(gimbal);
+//
+//            WaypointAction photo = new WaypointAction(WaypointActionType.START_TAKE_PHOTO,1);
+//            wp.addAction(photo);
+//
+//            listOfWaypoints.add(wp);
+
         }
 
         builder.waypointList(listOfWaypoints);
-        builder.waypointCount(listOfWaypoints.size());
+        builder.waypointCount(5);
 
         WaypointMission wp = builder.build();
         return wp;
