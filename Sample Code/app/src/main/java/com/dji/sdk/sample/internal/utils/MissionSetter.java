@@ -2,6 +2,9 @@ package com.dji.sdk.sample.internal.utils;
 
 import com.dji.sdk.sample.internal.model.CompletionCallbackImplementation;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import dji.common.error.DJIError;
 import dji.common.flightcontroller.FlightControllerState;
 import dji.common.flightcontroller.simulator.InitializationData;
@@ -30,6 +33,9 @@ import dji.sdk.mission.waypoint.WaypointMissionOperatorListener;
 import dji.sdk.products.Aircraft;
 import dji.sdk.sdkmanager.DJISDKManager;
 
+import static dji.keysdk.FlightControllerKey.HOME_LOCATION_LATITUDE;
+import static dji.keysdk.FlightControllerKey.HOME_LOCATION_LONGITUDE;
+
 public class MissionSetter {
 
     private String[][] routeCoordinates;
@@ -44,8 +50,29 @@ public class MissionSetter {
 
         WaypointMission.Builder builder =  new WaypointMission.Builder();
 
+        double baseLatitude = 22;
+        double baseLongitude = 113;
+        Object latitudeValue = KeyManager.getInstance().getValue((FlightControllerKey.create(HOME_LOCATION_LATITUDE)));
+        Object longitudeValue = KeyManager.getInstance().getValue((FlightControllerKey.create(HOME_LOCATION_LONGITUDE)));
+        builder.autoFlightSpeed(5f);
+        builder.maxFlightSpeed(10f);
+        builder.setExitMissionOnRCSignalLostEnabled(false);
+        builder.finishedAction(WaypointMissionFinishedAction.NO_ACTION);
+        builder.flightPathMode(WaypointMissionFlightPathMode.NORMAL);
+        builder.gotoFirstWaypointMode(WaypointMissionGotoWaypointMode.SAFELY);
+        builder.headingMode(WaypointMissionHeadingMode.AUTO);
+        builder.repeatTimes(1);
+
+        if (latitudeValue != null && latitudeValue instanceof Double) {
+            baseLatitude = (double) latitudeValue;
+        }
+        if (longitudeValue != null && longitudeValue instanceof Double) {
+            baseLongitude = (double) longitudeValue;
+        }
+
+        List<Waypoint> waypointList = new ArrayList<>();
         for (int i = 0; i < reader.size(); i++) {
-            Waypoint wp = new Waypoint(Double.parseDouble(routeCoordinates[i][0]),
+            Waypoint wp = new Waypoint(Double.parseDouble(routeCoordinates[i][0]), // c
                     Double.parseDouble(routeCoordinates[i][1]),
                     Float.parseFloat(routeCoordinates[i][2]));
 
@@ -53,12 +80,17 @@ public class MissionSetter {
                     Integer.parseInt(routeCoordinates[i][3]));// may need action param
             wp.addAction(turn);
 
-            WaypointAction photo = new WaypointAction(WaypointActionType.START_TAKE_PHOTO,1);
+//            WaypointAction gimbal = new WaypointAction(WaypointActionType.GIMBAL_PITCH, routeCoordinates[i][4]);
+//            wp.addAction(gimbal);
+
+            WaypointAction photo = new WaypointAction(WaypointActionType.START_TAKE_PHOTO,1); // maybe yaw idk
             wp.addAction(photo);
 
-            builder.addWaypoint(wp);
+            waypointList.add(wp);
 
         }
+
+        builder.waypointList(waypointList).waypointCount(waypointList.size());
 
         WaypointMission wp = builder.build();
         return wp;
