@@ -40,10 +40,7 @@ public class MissionSetter {
 
     private String[][] routeCoordinates;
 
-    public WaypointMission setMission(String[][] coordinates) {
-
-        Reader reader = new Reader();
-        routeCoordinates = reader.readInput();
+    public WaypointMission setMission(String[][] coordinates, int numCoordinates) {
 
         MissionControl mc = DJISDKManager.getInstance().getMissionControl();
         WaypointMissionOperator wmo = mc.getWaypointMissionOperator();
@@ -61,7 +58,7 @@ public class MissionSetter {
         builder.flightPathMode(WaypointMissionFlightPathMode.NORMAL);
         builder.gotoFirstWaypointMode(WaypointMissionGotoWaypointMode.SAFELY);
         builder.headingMode(WaypointMissionHeadingMode.AUTO);
-        builder.repeatTimes(1);
+        builder.repeatTimes(0);
 
         if (latitudeValue != null && latitudeValue instanceof Double) {
             baseLatitude = (double) latitudeValue;
@@ -70,9 +67,11 @@ public class MissionSetter {
             baseLongitude = (double) longitudeValue;
         }
 
-        List<Waypoint> waypointList = new ArrayList<>();
-        for (int i = 0; i < reader.size(); i++) {
-            Waypoint wp = new Waypoint(Double.parseDouble(routeCoordinates[i][0]), // c
+        List<Waypoint> listOfWaypoints = new ArrayList<>();
+
+
+        for (int i = 0; i < numCoordinates; i++) {
+            final Waypoint wp = new Waypoint(Double.parseDouble(routeCoordinates[i][0]), // c
                     Double.parseDouble(routeCoordinates[i][1]),
                     Float.parseFloat(routeCoordinates[i][2]));
 
@@ -83,14 +82,15 @@ public class MissionSetter {
 //            WaypointAction gimbal = new WaypointAction(WaypointActionType.GIMBAL_PITCH, routeCoordinates[i][4]);
 //            wp.addAction(gimbal);
 
-            WaypointAction photo = new WaypointAction(WaypointActionType.START_TAKE_PHOTO,1); // maybe yaw idk
+            WaypointAction photo = new WaypointAction(WaypointActionType.START_TAKE_PHOTO,1);
             wp.addAction(photo);
 
-            waypointList.add(wp);
+            listOfWaypoints.add(wp);
 
         }
 
-        builder.waypointList(waypointList).waypointCount(waypointList.size());
+        builder.waypointList(listOfWaypoints);
+        builder.waypointCount(listOfWaypoints.size());
 
         WaypointMission wp = builder.build();
         return wp;

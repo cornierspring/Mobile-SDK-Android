@@ -54,6 +54,7 @@ public class WaypointMissionOperatorView extends MissionBaseView {
     private WaypointMission mission;
     private WaypointMissionOperatorListener listener;
     private Reader rdr = new Reader();
+
     //private final int WAYPOINT_COUNT = 5;
 
     public WaypointMissionOperatorView(Context context) {
@@ -92,10 +93,10 @@ public class WaypointMissionOperatorView extends MissionBaseView {
 
             case R.id.btn_set_maximum_radius:
                 if (getFlightController() != null) {
-                    flightController.setMaxFlightRadius(700, new CommonCallbacks.CompletionCallback() {
+                    flightController.setMaxFlightRadius(500, new CommonCallbacks.CompletionCallback() {
                         @Override
                         public void onResult(DJIError djiError) {
-                            ToastUtils.setResultToToast(djiError == null ? "Max Flight Radius is set to 700!" : djiError.getDescription());
+                            ToastUtils.setResultToToast(djiError == null ? "Max Flight Radius is set to 500m!" : djiError.getDescription());
                         }
                     });
                 }
@@ -105,7 +106,7 @@ public class WaypointMissionOperatorView extends MissionBaseView {
                // mission = createRandomWaypointMission(WAYPOINT_COUNT, 1);
                 MissionSetter ms = new MissionSetter();
 
-                mission = ms.setMission(rdr.readInput());
+                mission = ms.setMission(rdr.readInput(), rdr.size());
                 DJIError djiError = waypointMissionOperator.loadMission(mission);
                 showResultToast(djiError);
 
@@ -344,6 +345,7 @@ public class WaypointMissionOperatorView extends MissionBaseView {
             @Override
             public void onDownloadUpdate(@NonNull WaypointMissionDownloadEvent waypointMissionDownloadEvent) {
                 // Example of Download Listener
+                rdr.readInput();
                 if (waypointMissionDownloadEvent.getProgress() != null
                     && waypointMissionDownloadEvent.getProgress().isSummaryDownloaded
                     && waypointMissionDownloadEvent.getProgress().downloadedWaypointIndex == (rdr.size() - 1)) {
@@ -355,6 +357,7 @@ public class WaypointMissionOperatorView extends MissionBaseView {
             @Override
             public void onUploadUpdate(@NonNull WaypointMissionUploadEvent waypointMissionUploadEvent) {
                 // Example of Upload Listener
+                rdr.readInput();
                 if (waypointMissionUploadEvent.getProgress() != null
                     && waypointMissionUploadEvent.getProgress().isSummaryUploaded
                     && waypointMissionUploadEvent.getProgress().uploadedWaypointIndex == (rdr.size() - 1)) {

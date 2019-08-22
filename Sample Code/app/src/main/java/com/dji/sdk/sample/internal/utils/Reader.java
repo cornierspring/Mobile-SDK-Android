@@ -15,6 +15,40 @@ public class Reader {
 
     public String[][] readInput() {
 
+        size();
+        File sdcard = Environment.getExternalStorageDirectory();
+        File file = new File(sdcard,"input.csv");
+
+        String[][] coordinates = new String[count][4];
+
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            String line;
+
+            line = br.readLine();
+            line = br.readLine();
+            int i = 0;
+
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split(",");
+                coordinates[i][0] = parts[0];
+                coordinates[i][1] = parts[1];
+                coordinates[i][2] = parts[2];
+                coordinates[i][3] = parts[3];
+                i++;
+            }
+            br.close();
+        }
+        catch (IOException e) {
+
+        }
+
+        return coordinates;
+
+    }
+
+    public int size() {
+
         File sdcard = Environment.getExternalStorageDirectory();
 
         File file = new File(sdcard,"input.csv");
@@ -38,35 +72,6 @@ public class Reader {
 
         }
 
-        String[][] coordinates = new String[count][4];
-
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(file));
-            String line;
-
-            line = br.readLine();
-            line = br.readLine();
-            int i = 0;
-
-            while ((line = br.readLine()) != null) {
-                String[] parts = line.split(",");
-                coordinates[i][0] = parts[0];
-                coordinates[i][1] = parts[1];
-                coordinates[i][2] = parts[2];
-                coordinates[i][3] = parts[3];
-
-            }
-            br.close();
-        }
-        catch (IOException e) {
-
-        }
-
-        return coordinates;
-
-    }
-
-    public int size() {
         return count;
     }
 
