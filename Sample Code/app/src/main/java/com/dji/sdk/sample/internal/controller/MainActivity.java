@@ -90,7 +90,21 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    //TEST <===========================
+
+//    @Override
+//    protected void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        checkAndRequestPermissions();
+//        DJISampleApplication.getEventBus().register(this);
+//
+//
+//        initParams();
+//    }
+
+
     //region Life-cycle
+    //real
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

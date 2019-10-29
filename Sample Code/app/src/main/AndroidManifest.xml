@@ -34,7 +34,7 @@
         android:name=".internal.controller.DJISampleApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/sample_app_name"
+        android:label="Drone Controller"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <!--
@@ -44,7 +44,7 @@
         -->
         <meta-data
             android:name="com.dji.sdk.API_KEY"
-            android:value="Please enter your App Key here."/>
+            android:value="340da3e3ab40e217c3641bfb"/>
 
         <!-- Required for receiving accessory attachment events.
             This is necessary for product when connecting over USB. -->
