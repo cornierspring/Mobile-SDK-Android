@@ -80,9 +80,9 @@ public abstract class MissionBaseView extends RelativeLayout implements View.OnC
         resumeBtn = (Button) findViewById(R.id.btn_resume);
         downloadBtn = (Button) findViewById(R.id.btn_download);
         progressBar = (ProgressBar) findViewById(R.id.pb_mission);
-        simulatorBtn = (Button) findViewById(R.id.btn_simulator);
-        maxAltitudeBtn = (Button) findViewById(R.id.btn_set_maximum_altitude);
-        maxRadiusBtn = (Button) findViewById(R.id.btn_set_maximum_radius);
+        simulatorBtn = (Button) findViewById(R.id.btn_route1);
+        maxAltitudeBtn = (Button) findViewById(R.id.btn_route2);
+        maxRadiusBtn = (Button) findViewById(R.id.btn_route3);
 
         loadBtn.setOnClickListener(this);
         uploadBtn.setOnClickListener(this);

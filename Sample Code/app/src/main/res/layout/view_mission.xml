@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
-       android:layout_width="match_parent"
-       android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/tv_fc_info"
@@ -24,38 +24,38 @@
         android:clickable="true"/>
 
     <Button
-        android:id="@+id/btn_simulator"
+        android:id="@+id/btn_route1"
         android:layout_below="@id/tv_mission_info"
-        android:layout_toLeftOf="@+id/btn_set_maximum_altitude"
-        android:text="Start Simulator"
+        android:layout_toLeftOf="@+id/btn_route2"
+        android:text="Route 1"
         style="@style/common_button"/>
 
     <Button
-        android:id="@+id/btn_set_maximum_altitude"
+        android:id="@+id/btn_route2"
         android:layout_below="@id/tv_mission_info"
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:text="Set Max Altitude"
+        android:text="Route 2"
         style="@style/common_button"/>
 
     <Button
-        android:id="@+id/btn_set_maximum_radius"
+        android:id="@+id/btn_route3"
         android:layout_below="@id/tv_mission_info"
-        android:layout_toRightOf="@+id/btn_set_maximum_altitude"
-        android:text="Set Max Radius"
+        android:layout_toRightOf="@+id/btn_route2"
+        android:text="Route 3"
         style="@style/common_button"/>
 
     <Button
         android:id="@+id/btn_load"
-        android:layout_below="@id/btn_simulator"
+        android:layout_below="@id/btn_route1"
         android:layout_toLeftOf="@+id/btn_upload"
-        android:text="Load"
+        android:text="Test"
         style="@style/common_button"/>
 
     <Button
         android:id="@+id/btn_upload"
-        android:layout_below="@id/btn_simulator"
+        android:layout_below="@id/btn_route1"
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
@@ -64,7 +64,7 @@
 
     <Button
         android:id="@+id/btn_start"
-        android:layout_below="@id/btn_simulator"
+        android:layout_below="@id/btn_route1"
         android:layout_toRightOf="@+id/btn_upload"
         android:text="Start"
         style="@style/common_button"/>

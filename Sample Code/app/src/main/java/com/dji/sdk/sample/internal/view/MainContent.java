@@ -94,7 +94,7 @@ public class MainContent extends RelativeLayout {
         mBtnOpen = (Button) findViewById(R.id.btn_open);
         mBridgeModeEditText = (EditText) findViewById(R.id.edittext_bridge_ip);
         mBtnBluetooth = (Button) findViewById(R.id.btn_bluetooth);
-        //mBtnBluetooth.setEnabled(false);
+        mBtnBluetooth.setEnabled(false);
 
         mBtnOpen.setOnClickListener(new OnClickListener() {
             @Override
@@ -285,12 +285,12 @@ public class MainContent extends RelativeLayout {
                 if (aircraft.getRemoteController() != null && aircraft.getRemoteController().isConnected()) {
                     mTextConnectionStatus.setText(R.string.connection_only_rc);
                     mTextProduct.setText(R.string.product_information);
-                    mBtnOpen.setEnabled(false);
+                    mBtnOpen.setEnabled(true);
                     mTextModelAvailable.setText("Firmware version:N/A");
                 }
             }
         } else {
-            mBtnOpen.setEnabled(false);
+            mBtnOpen.setEnabled(true);
             mTextProduct.setText(R.string.product_information);
             mTextConnectionStatus.setText(R.string.connection_loose);
             mTextModelAvailable.setText("Firmware version:N/A");
