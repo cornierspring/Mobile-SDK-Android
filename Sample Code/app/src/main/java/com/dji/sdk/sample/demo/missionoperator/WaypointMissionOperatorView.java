@@ -48,6 +48,12 @@ import static dji.keysdk.FlightControllerKey.HOME_LOCATION_LONGITUDE;
  */
 public class WaypointMissionOperatorView extends MissionBaseView {
 
+    private static final double[][] ROUTE1;
+    private static final double[][] ROUTE2;
+    private static final double[][] ROUTE3;
+    private static final double[][] TEST;
+
+
     private static final double ONE_METER_OFFSET = 0.00000899322;
     private static final String TAG = WaypointMissionOperatorView.class.getSimpleName();
     private WaypointMissionOperator waypointMissionOperator;
@@ -68,47 +74,58 @@ public class WaypointMissionOperatorView extends MissionBaseView {
             waypointMissionOperator = MissionControl.getInstance().getWaypointMissionOperator();
         }
         switch (v.getId()) {
-            case R.id.btn_simulator:
-               if (getFlightController() != null) {
-                   flightController.getSimulator()
-                                   .start(InitializationData.createInstance(new LocationCoordinate2D(22, 113), 10, 10),
-                                          new CommonCallbacks.CompletionCallback() {
-                                              @Override
-                                              public void onResult(DJIError djiError) {
-                                                  showResultToast(djiError);
-                                              }
-                                          });
+            case R.id.btn_route1:
+
+                mission = createWaypointMission(1);
+                DJIError djiError = waypointMissionOperator.loadMission(mission);
+
+//                showResultToast(djiError);
+//               if (getFlightController() != null) {
+//                   flightController.getSimulator()
+//                                   .start(InitializationData.createInstance(new LocationCoordinate2D(22, 113), 10, 10),
+//                                          new CommonCallbacks.CompletionCallback() {
+//                                              @Override
+//                                              public void onResult(DJIError djiError) {
+//                                                  showResultToast(djiError);
+//                                              }
+//                                          });
                }
                 break;
-            case R.id.btn_set_maximum_altitude:
-                if (getFlightController() != null) {
-                    flightController.setMaxFlightHeight(500, new CommonCallbacks.CompletionCallback() {
-                        @Override
-                        public void onResult(DJIError djiError) {
-                            ToastUtils.setResultToToast(djiError == null ? "Max Flight Height is set to 500m!" : djiError.getDescription());
-                        }
-                    });
-                }
+            case R.id.btn_set_route2:
+
+                mission = createWaypointMission(2);
+                DJIError djiError = waypointMissionOperator.loadMission(mission);
+
+//                showResultToast(djiError);
+//                if (getFlightController() != null) {
+//                    flightController.setMaxFlightHeight(500, new CommonCallbacks.CompletionCallback() {
+//                        @Override
+//                        public void onResult(DJIError djiError) {
+//                            ToastUtils.setResultToToast(djiError == null ? "Max Flight Height is set to 500m!" : djiError.getDescription());
+//                        }
+//                    });
+//                }
                 break;
 
-            case R.id.btn_set_maximum_radius:
-                if (getFlightController() != null) {
-                    flightController.setMaxFlightRadius(500, new CommonCallbacks.CompletionCallback() {
-                        @Override
-                        public void onResult(DJIError djiError) {
-                            ToastUtils.setResultToToast(djiError == null ? "Max Flight Radius is set to 500m!" : djiError.getDescription());
-                        }
-                    });
-                }
+            case R.id.btn_route3:
+
+                mission = createWaypointMission(3);
+                DJIError djiError = waypointMissionOperator.loadMission(mission);
+
+  //              showResultToast(djiError);
+//                if (getFlightController() != null) {
+//                    flightController.setMaxFlightRadius(500, new CommonCallbacks.CompletionCallback() {
+//                        @Override
+//                        public void onResult(DJIError djiError) {
+//                            ToastUtils.setResultToToast(djiError == null ? "Max Flight Radius is set to 500m!" : djiError.getDescription());
+//                        }
+//                    });
+//                }
                 break;
             case R.id.btn_load:
                 // Example of loading a Mission
-               // mission = createRandomWaypointMission(WAYPOINT_COUNT, 1);
-                MissionSetter ms = new MissionSetter();
-
-                mission = ms.setMission(rdr.readInput(), rdr.size());
+                mission = createWaypointMission(4);
                 DJIError djiError = waypointMissionOperator.loadMission(mission);
-                showResultToast(djiError);
 
                 break;
 
@@ -271,18 +288,29 @@ public class WaypointMissionOperatorView extends MissionBaseView {
     //region Example of Creating a Waypoint Mission
 
     /**
-     * Randomize a WaypointMission
-     *
-     * @param numberOfWaypoint total number of Waypoint to randomize
-     * @param numberOfAction total number of Action to randomize
      */
-    private WaypointMission createRandomWaypointMission(int numberOfWaypoint, int numberOfAction) {
+    //endregion
+
+    private WaypointMission createWaypointMission(int route) {
         WaypointMission.Builder builder = new WaypointMission.Builder();
-        double baseLatitude = 22;
-        double baseLongitude = 113;
+
+        String[][] points;
+        if (route == 1) {
+            points = ROUTE1;
+        } else if (route == 2) {
+            points = ROUTE2;
+        } else if (route == 3) {
+            points = ROUTE3;
+        } else {
+            points = TEST;
+        }
+        // find bridge coordinates
+        // find house coordinates
+        double baseLatitude = 22; //
+        double baseLongitude = 113; //
         Object latitudeValue = KeyManager.getInstance().getValue((FlightControllerKey.create(HOME_LOCATION_LATITUDE)));
         Object longitudeValue =
-            KeyManager.getInstance().getValue((FlightControllerKey.create(HOME_LOCATION_LONGITUDE)));
+                KeyManager.getInstance().getValue((FlightControllerKey.create(HOME_LOCATION_LONGITUDE)));
         if (latitudeValue != null && latitudeValue instanceof Double) {
             baseLatitude = (double) latitudeValue;
         }
@@ -298,47 +326,21 @@ public class WaypointMissionOperatorView extends MissionBaseView {
         builder.flightPathMode(WaypointMissionFlightPathMode.NORMAL);
         builder.gotoFirstWaypointMode(WaypointMissionGotoWaypointMode.SAFELY);
         builder.headingMode(WaypointMissionHeadingMode.AUTO);
-        builder.repeatTimes(1);
-        Random randomGenerator = new Random(System.currentTimeMillis());
+
         List<Waypoint> waypointList = new ArrayList<>();
-        for (int i = 0; i < numberOfWaypoint; i++) {
-            final double variation = (Math.floor(i / 4) + 1) * 2 * ONE_METER_OFFSET;
-            final float variationFloat = (baseAltitude + (i + 1) * 2);
-            final Waypoint eachWaypoint = new Waypoint(baseLatitude + variation * Math.pow(-1, i) * Math.pow(0, i % 2),
-                                                       baseLongitude + variation * Math.pow(-1, (i + 1)) * Math.pow(0, (i + 1) % 2),
-                                                       variationFloat);
-            for (int j = 0; j < numberOfAction; j++) {
-                final int randomNumber = randomGenerator.nextInt() % 6;
-                switch (randomNumber) {
-                    case 0:
-                        eachWaypoint.addAction(new WaypointAction(WaypointActionType.STAY, 1));
-                        break;
-                    case 1:
-                        eachWaypoint.addAction(new WaypointAction(WaypointActionType.START_TAKE_PHOTO, 1));
-                        break;
-                    case 2:
-                        eachWaypoint.addAction(new WaypointAction(WaypointActionType.START_RECORD, 1));
-                        eachWaypoint.addAction(new WaypointAction(WaypointActionType.STOP_RECORD, 1));
-                        break;
-                    case 3:
-                        eachWaypoint.addAction(new WaypointAction(WaypointActionType.GIMBAL_PITCH,
-                                                                  randomGenerator.nextInt() % 45 - 45));
-                        break;
-                    case 4:
-                        eachWaypoint.addAction(new WaypointAction(WaypointActionType.ROTATE_AIRCRAFT,
-                                                                  randomGenerator.nextInt() % 180));
-                        break;
-                    default:
-                        eachWaypoint.addAction(new WaypointAction(WaypointActionType.START_TAKE_PHOTO, 1));
-                        break;
-                }
-            }
+
+        for (int i = 0; i < points.length; i++) {
+
+            final Waypoint eachWaypoint = new Waypoint(points[i][0], points[i][1], points[i][1]); // convert to double double and float
+
+            eachWaypoint.addAction(new WaypointAction(WaypointActionType.GIMBAL_PITCH, points[i][3]));
+            eachWaypoint.addAction(new WaypointAction(WaypointActionType.ROTATE_AIRCRAFT,points[i][4]));
+
             waypointList.add(eachWaypoint);
         }
         builder.waypointList(waypointList).waypointCount(waypointList.size());
         return builder.build();
     }
-    //endregion
 
     //region Not important stuff
     private void setUpListener() {

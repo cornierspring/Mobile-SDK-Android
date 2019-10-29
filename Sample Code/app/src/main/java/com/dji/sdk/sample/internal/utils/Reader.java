@@ -11,11 +11,12 @@ import java.io.InputStream;
 
 public class Reader {
 
+    private int size;
     private int count;
 
     public String[][] readInput() {
 
-        size();
+        this.size = findSize();
         File sdcard = Environment.getExternalStorageDirectory();
         File file = new File(sdcard,"input.csv");
 
@@ -47,7 +48,11 @@ public class Reader {
 
     }
 
-    public int size() {
+    public size() {
+        return this.size;
+    }
+
+    private int findSize() {
 
         File sdcard = Environment.getExternalStorageDirectory();
 
